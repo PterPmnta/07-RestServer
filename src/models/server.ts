@@ -1,47 +1,30 @@
 import express from 'express';
 import cors from 'cors';
 import * as dotenv from 'dotenv';
+import { router } from '../routes/user.routes';
+
 dotenv.config();
 
 export class Server {
     app;
     port: string;
+    usuariosPath: string;
     constructor() {
         this.app = express();
         this.port = process.env.PORT!;
+        this.usuariosPath = '/api/usuarios';
         this.middlewares();
         this.routes();
     }
 
     middlewares() {
         this.app.use(cors());
+        this.app.use(express.json());
         this.app.use(express.static('public'));
     }
 
     routes() {
-        this.app.get('/api', (req, res) => {
-            res.json({
-                msg: 'GET API'
-            });
-        });
-
-        this.app.patch('/api', (req, res) => {
-            res.json({
-                msg: 'PUT API'
-            });
-        });
-
-        this.app.post('/api', (req, res) => {
-            res.json({
-                msg: 'POST API'
-            });
-        });
-
-        this.app.delete('/api', (req, res) => {
-            res.json({
-                msg: 'DELETE API'
-            });
-        });
+        this.app.use(this.usuariosPath, router);
     }
 
     listen() {
