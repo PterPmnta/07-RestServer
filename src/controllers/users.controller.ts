@@ -1,8 +1,11 @@
 import { Response, Request } from 'express';
 
 export const postUsers = (req: Request, res: Response) => {
+    const body = req.body;
+
     res.json({
-        msg: 'POST API - From Controller'
+        msg: 'POST API - From Controller',
+        body: body
     });
 };
 
