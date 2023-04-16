@@ -10,14 +10,19 @@ export const postUsers = (req: Request, res: Response) => {
 };
 
 export const getUsers = (req: Request, res: Response) => {
+    const params = req.query;
     res.json({
-        msg: 'GET API - From Controller'
+        msg: 'GET API - From Controller',
+        query: params
     });
 };
 
 export const putUsers = (req: Request, res: Response) => {
+    const id = req.params.id;
+
     res.json({
-        msg: 'PUT API - From Controller'
+        msg: 'PUT API - From Controller',
+        id: id
     });
 };
 
