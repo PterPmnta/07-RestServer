@@ -1,11 +1,15 @@
 import { Response, Request } from 'express';
+import { UserModel } from '../models/user.model';
 
-export const postUsers = (req: Request, res: Response) => {
+export const postUsers = async (req: Request, res: Response) => {
     const body = req.body;
+    const user = new UserModel(body);
+
+    await user.save();
 
     res.json({
         msg: 'POST API - From Controller',
-        body: body
+        usuario: user
     });
 };
 
