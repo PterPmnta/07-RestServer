@@ -1,11 +1,19 @@
 import { Response, Request } from 'express';
+import bcrypt from 'bcryptjs';
+import { UserModel } from '../models/user.model';
 
-export const postUsers = (req: Request, res: Response) => {
-    const body = req.body;
+export const postUsers = async (req: Request, res: Response) => {
+    const { name, email, password, role } = req.body;
+    const user = new UserModel({ name, email, password, role });
+
+    const salt = bcrypt.genSaltSync(10);
+    user.password = bcrypt.hashSync(password, salt);
+
+    await user.save();
 
     res.json({
         msg: 'POST API - From Controller',
-        body: body
+        usuario: user
     });
 };
 
