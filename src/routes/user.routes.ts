@@ -6,10 +6,11 @@ import {
     postUsers,
     putUsers
 } from '../controllers/users.controller';
+import { check } from 'express-validator';
 
 export const router = Router();
 
-router.post('/', postUsers);
+router.post('/', [check('email', 'Email is not valid').isEmail()], postUsers);
 
 router.get('/', getUsers);
 
