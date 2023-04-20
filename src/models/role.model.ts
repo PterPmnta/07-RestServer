@@ -1,11 +1,11 @@
 import { Schema, model } from 'mongoose';
 
 interface IRole {
-    role_name: string;
+    role: string;
 }
 
 const RoleSchema = new Schema<IRole>({
-    role_name: {
+    role: {
         type: String,
         required: [true, 'El role es obligatorio']
     }
