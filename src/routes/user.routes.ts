@@ -9,6 +9,7 @@ import {
 import { check } from 'express-validator';
 import { userValidation } from '../middlewares/user-validator';
 import { RoleModel } from '../models/role.model';
+import { roleValidator } from '../helpers/db-validator.helper';
 
 export const router = Router();
 
@@ -21,10 +22,7 @@ router.post(
             .isLength({ min: 6 })
             .not()
             .isEmpty(),
-        check('role').custom(async (role = '') => {
-            const existedRole = await RoleModel.findOne({ role });
-            if (!existedRole) throw new Error(`This role ${role} is not valid`);
-        }),
+        check('role').custom(roleValidator),
         userValidation
     ],
     postUsers
