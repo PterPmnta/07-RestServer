@@ -1,6 +1,7 @@
 import { Response, Request } from 'express';
 import bcrypt from 'bcryptjs';
 import { UserModel } from '../models/user.model';
+import { validationResult } from 'express-validator';
 
 export const postUsers = async (req: Request, res: Response) => {
     const { name, email, password, role } = req.body;
