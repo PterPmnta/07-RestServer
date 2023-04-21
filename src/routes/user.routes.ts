@@ -9,7 +9,7 @@ import {
 import { check } from 'express-validator';
 import { userValidation } from '../middlewares/user-validator';
 import { RoleModel } from '../models/role.model';
-import { roleValidator } from '../helpers/db-validator.helper';
+import { existedEmail, roleValidator } from '../helpers/db-validator.helper';
 
 export const router = Router();
 
@@ -17,6 +17,7 @@ router.post(
     '/',
     [
         check('email', 'Email is not valid').isEmail(),
+        check('email', 'Email is not valid').custom(existedEmail),
         check('name', 'Name cant be empty').not().isEmpty(),
         check('password', 'Password must be at least 6 characters')
             .isLength({ min: 6 })
