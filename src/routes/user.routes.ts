@@ -31,7 +31,7 @@ router.post(
 
 router.get('/', getUsers);
 
-router.patch('/', patchUsers);
+router.patch('/:id', patchUsers);
 
 router.put('/:id', putUsers);
 
