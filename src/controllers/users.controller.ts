@@ -26,12 +26,20 @@ export const getUsers = (req: Request, res: Response) => {
     });
 };
 
-export const putUsers = (req: Request, res: Response) => {
+export const putUsers = async (req: Request, res: Response) => {
     const id = req.params.id;
+    const { password, google, ...user } = req.body;
+
+    if (password) {
+        const salt = bcrypt.genSaltSync(10);
+        user.password = bcrypt.hashSync(password, salt);
+    }
+
+    const existedUser = await UserModel.findByIdAndUpdate(id, user);
 
     res.json({
         msg: 'PUT API - From Controller',
-        id: id
+        existedUser
     });
 };
 
