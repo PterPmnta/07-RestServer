@@ -9,7 +9,11 @@ import {
 import { check } from 'express-validator';
 import { userValidation } from '../middlewares/user-validator';
 import { RoleModel } from '../models/role.model';
-import { existedEmail, roleValidator } from '../helpers/db-validator.helper';
+import {
+    existedEmail,
+    existedUserById,
+    roleValidator
+} from '../helpers/db-validator.helper';
 
 export const router = Router();
 
@@ -33,6 +37,14 @@ router.get('/', getUsers);
 
 router.patch('/:id', patchUsers);
 
-router.put('/:id', putUsers);
+router.put(
+    '/:id',
+    [
+        check('id', 'No es un ID valido').isMongoId(),
+        check('id').custom(existedUserById),
+        userValidation
+    ],
+    putUsers
+);
 
 router.delete('/', deleteUsers);
