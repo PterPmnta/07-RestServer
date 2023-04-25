@@ -18,11 +18,13 @@ export const postUsers = async (req: Request, res: Response) => {
     });
 };
 
-export const getUsers = (req: Request, res: Response) => {
-    const params = req.query;
+export const getUsers = async (req: Request, res: Response) => {
+    const { limite = 5, desde = 0 } = req.query;
+    const users = await UserModel.find()
+        .limit(Number(limite))
+        .skip(Number(desde));
     res.json({
-        msg: 'GET API - From Controller',
-        query: params
+        users: users
     });
 };
 
