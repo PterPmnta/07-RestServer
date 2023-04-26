@@ -20,11 +20,16 @@ export const postUsers = async (req: Request, res: Response) => {
 
 export const getUsers = async (req: Request, res: Response) => {
     const { limite = 5, desde = 0 } = req.query;
-    const users = await UserModel.find()
-        .limit(Number(limite))
-        .skip(Number(desde));
+    const query = { status: true };
+
+    const [users, numberUsers] = await Promise.all([
+        UserModel.find(query).limit(Number(limite)).skip(Number(desde)),
+        UserModel.countDocuments(query)
+    ]);
+
     res.json({
-        users: users
+        users,
+        numberUsers
     });
 };
 
