@@ -56,8 +56,14 @@ export const patchUsers = (req: Request, res: Response) => {
     });
 };
 
-export const deleteUsers = (req: Request, res: Response) => {
+export const deleteUsers = async (req: Request, res: Response) => {
+    const { id } = req.params;
+
+    const deletedUser = await UserModel.findByIdAndUpdate(id, {
+        status: false
+    });
+
     res.json({
-        msg: 'DELETE API - From Controller'
+        deletedUser
     });
 };
