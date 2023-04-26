@@ -18,11 +18,18 @@ export const postUsers = async (req: Request, res: Response) => {
     });
 };
 
-export const getUsers = (req: Request, res: Response) => {
-    const params = req.query;
+export const getUsers = async (req: Request, res: Response) => {
+    const { limite = 5, desde = 0 } = req.query;
+    const query = { status: true };
+
+    const [users, numberUsers] = await Promise.all([
+        UserModel.find(query).limit(Number(limite)).skip(Number(desde)),
+        UserModel.countDocuments(query)
+    ]);
+
     res.json({
-        msg: 'GET API - From Controller',
-        query: params
+        users,
+        numberUsers
     });
 };
 
