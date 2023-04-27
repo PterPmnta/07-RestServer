@@ -8,16 +8,15 @@ import {
 } from '../controllers/users.controller';
 import { check } from 'express-validator';
 import { userValidation } from '../middlewares/user-validator';
-import { RoleModel } from '../models/role.model';
 import {
     existedEmail,
     existedUserById,
     roleValidator
 } from '../helpers/db-validator.helper';
 
-export const router = Router();
+export const userRoutes = Router();
 
-router.post(
+userRoutes.post(
     '/',
     [
         check('email', 'Email is not valid').isEmail(),
@@ -33,11 +32,11 @@ router.post(
     postUsers
 );
 
-router.get('/', getUsers);
+userRoutes.get('/', getUsers);
 
-router.patch('/:id', patchUsers);
+userRoutes.patch('/:id', patchUsers);
 
-router.put(
+userRoutes.put(
     '/:id',
     [
         check('id', 'No es un ID valido').isMongoId(),
@@ -47,7 +46,7 @@ router.put(
     putUsers
 );
 
-router.delete(
+userRoutes.delete(
     '/:id',
     [
         check('id', 'No es un ID valido').isMongoId(),
