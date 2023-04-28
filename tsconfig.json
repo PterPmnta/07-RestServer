@@ -10,7 +10,8 @@
         "outDir": "./dist",
         "resolveJsonModule": true,
         "forceConsistentCasingInFileNames": true,
-        "skipLibCheck": true
+        "skipLibCheck": true,
+        "typeRoots": ["./src/types", "./node_modules/@types"]
     },
     "ts-node": {
         "esm": true,
