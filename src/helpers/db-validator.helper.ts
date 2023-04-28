@@ -1,8 +1,5 @@
-import { Response, Request } from 'express';
-import { validationResult } from 'express-validator';
 import { RoleModel } from '../models/role.model';
 import { UserModel } from '../models/user.model';
-import mongoose from 'mongoose';
 
 export const roleValidator = async (role = '') => {
     const existedRole = await RoleModel.findOne({ role });
