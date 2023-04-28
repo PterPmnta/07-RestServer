@@ -57,16 +57,12 @@ export const patchUsers = (req: Request, res: Response) => {
 
 export const deleteUsers = async (req: Request, res: Response) => {
     const { id } = req.params;
-    const uid = req.uid;
-
-    console.log(uid);
 
     const deletedUser = await UserModel.findByIdAndUpdate(id, {
         status: false
     });
 
     res.json({
-        deletedUser,
-        uid
+        deletedUser
     });
 };
