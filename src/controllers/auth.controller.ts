@@ -6,8 +6,8 @@ import { generateJWT } from '../helpers/generate-jwt.helper';
 export const login = async (req: Request, res: Response) => {
     try {
         const { email, password } = req.body;
-
         const existedUser = await UserModel.findOne({ email });
+
         if (!existedUser) {
             return res.status(400).json({
                 msg: 'El usuario no existe'
@@ -16,7 +16,7 @@ export const login = async (req: Request, res: Response) => {
 
         if (!existedUser.status) {
             return res.status(400).json({
-                msg: 'El usuario no esta activo'
+                msg: `El usuario no esta activo - estado ${existedUser.status}`
             });
         }
 
