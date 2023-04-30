@@ -14,7 +14,7 @@ import {
     roleValidator
 } from '../helpers/db-validator.helper';
 import { validateJWT } from '../middlewares/jwt-validator';
-import { validatedRole } from '../middlewares/role-validator';
+import { haveRole } from '../middlewares/role-validator';
 
 export const userRoutes = Router();
 
@@ -52,7 +52,7 @@ userRoutes.delete(
     '/:id',
     [
         validateJWT,
-        validatedRole,
+        haveRole('ADMINA_ROLE', 'SALES_ROLE'),
         check('id', 'No es un ID valido').isMongoId(),
         check('id').custom(existedUserById),
         userValidation
