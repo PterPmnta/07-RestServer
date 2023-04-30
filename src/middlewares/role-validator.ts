@@ -14,3 +14,21 @@ export const validatedRole = (req: Request, res: Response, next: any) => {
     }
     next();
 };
+
+export const haveRole = (...roles: string[]) => {
+    return (req: Request, res: Response, next: any) => {
+        if (!req.user) {
+            return res.status(500).json({
+                message: 'Must be validated the JWT first'
+            });
+        }
+
+        if (!roles.includes(req.user.role)) {
+            return res.status(401).json({
+                message: 'Unauthorized, is neccesary ADMIN_ROLE, SALES_ROLE'
+            });
+        }
+
+        next();
+    };
+};
