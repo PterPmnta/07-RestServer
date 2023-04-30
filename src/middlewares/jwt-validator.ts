@@ -4,7 +4,6 @@ import { UserModel } from '../models/user.model';
 
 export const validateJWT = async (req: Request, res: Response, next: any) => {
     const token = req.header('x-token');
-    console.log(token);
     if (!token) {
         return res.status(401).json({
             ok: false,
