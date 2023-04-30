@@ -3,8 +3,10 @@ import { deleteUsers, getUsers, patchUsers, postUsers, putUsers } from '../contr
 import { check } from 'express-validator';
 import { userValidation } from '../middlewares/user-validator';
 import { existedEmail, existedUserById, roleValidator } from '../helpers/db-validator.helper';
-export const router = Router();
-router.post('/', [
+import { validateJWT } from '../middlewares/jwt-validator';
+import { haveRole } from '../middlewares/role-validator';
+export const userRoutes = Router();
+userRoutes.post('/', [
     check('email', 'Email is not valid').isEmail(),
     check('email', 'Email is not valid').custom(existedEmail),
     check('name', 'Name cant be empty').not().isEmpty(),
@@ -15,14 +17,16 @@ router.post('/', [
     check('role').custom(roleValidator),
     userValidation
 ], postUsers);
-router.get('/', getUsers);
-router.patch('/:id', patchUsers);
-router.put('/:id', [
+userRoutes.get('/', getUsers);
+userRoutes.patch('/:id', patchUsers);
+userRoutes.put('/:id', [
     check('id', 'No es un ID valido').isMongoId(),
     check('id').custom(existedUserById),
     userValidation
 ], putUsers);
-router.delete('/:id', [
+userRoutes.delete('/:id', [
+    validateJWT,
+    haveRole('ADMINA_ROLE', 'SALES_ROLE'),
     check('id', 'No es un ID valido').isMongoId(),
     check('id').custom(existedUserById),
     userValidation
