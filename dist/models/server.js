@@ -9,15 +9,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import express from 'express';
 import cors from 'cors';
-import * as dotenv from 'dotenv';
-import { router } from '../routes/user.routes';
+import { userRoutes } from '../routes/user.routes';
 import { dbConnection } from '../database/config.db';
+import { authRoutes } from '../routes/auth.routes';
+import * as dotenv from 'dotenv';
 dotenv.config();
 export class Server {
     constructor() {
         this.app = express();
         this.port = process.env.PORT;
         this.usuariosPath = '/api/usuarios';
+        this.authPath = '/api/auth';
         this.createDBConection();
         this.middlewares();
         this.routes();
@@ -33,7 +35,8 @@ export class Server {
         this.app.use(express.static('public'));
     }
     routes() {
-        this.app.use(this.usuariosPath, router);
+        this.app.use(this.usuariosPath, userRoutes);
+        this.app.use(this.authPath, authRoutes);
     }
     listen() {
         this.app.listen(this.port, () => {
