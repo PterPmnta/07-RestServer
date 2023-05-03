@@ -43,3 +43,12 @@ export const login = async (req: Request, res: Response) => {
         });
     }
 };
+
+export const googleSignIn = (req: Request, res: Response) => {
+    const { id_token } = req.body;
+
+    res.json({
+        msg: 'googleSignIn',
+        id_token
+    });
+};
