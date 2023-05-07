@@ -2,6 +2,7 @@ import { Response, Request } from 'express';
 import bcrypt from 'bcryptjs';
 import { UserModel } from '../models/user.model';
 import { generateJWT } from '../helpers/generate-jwt.helper';
+import { googleVerify } from '../helpers/google-verify.helper';
 
 export const login = async (req: Request, res: Response) => {
     try {
@@ -44,11 +45,20 @@ export const login = async (req: Request, res: Response) => {
     }
 };
 
-export const googleSignIn = (req: Request, res: Response) => {
+export const googleSignIn = async (req: Request, res: Response) => {
     const { id_token } = req.body;
 
-    res.json({
-        msg: 'googleSignIn',
-        id_token
-    });
+    try {
+        const { name, email, img } = await googleVerify(id_token);
+
+        res.json({
+            msg: 'googleSignIn',
+            id_token
+        });
+    } catch (error) {
+        res.status(400).json({
+            msg: 'Token de google no es valido',
+            ok: false
+        });
+    }
 };
