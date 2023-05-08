@@ -10,6 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import bcrypt from 'bcryptjs';
 import { UserModel } from '../models/user.model';
 import { generateJWT } from '../helpers/generate-jwt.helper';
+import { googleVerify } from '../helpers/google-verify.helper';
 export const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { email, password } = req.body;
@@ -39,6 +40,41 @@ export const login = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     catch (error) {
         return res.status(500).json({
             msg: 'Error al intentar loguearse'
+        });
+    }
+});
+export const googleSignIn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id_token } = req.body;
+    try {
+        const { name, email, img } = yield googleVerify(id_token);
+        let user = yield UserModel.findOne({ email });
+        if (!user) {
+            const data = {
+                name,
+                email,
+                password: 'XX',
+                img,
+                role: 'USER_ROLE',
+                google: true
+            };
+            user = new UserModel(data);
+            yield user.save();
+        }
+        if (!user.status) {
+            res.status(401).json({
+                msg: 'Usuario bloqueado. Comuniquese con el administrador'
+            });
+        }
+        const token = yield generateJWT(user.id);
+        res.json({
+            user,
+            token
+        });
+    }
+    catch (error) {
+        res.status(400).json({
+            msg: 'Token de google no es valido',
+            ok: false
         });
     }
 });
