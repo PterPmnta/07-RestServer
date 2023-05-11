@@ -1,22 +1,30 @@
 import express from 'express';
 import cors from 'cors';
-import { userRoutes } from '../routes/user.routes';
 import { dbConnection } from '../database/config.db';
+import { userRoutes } from '../routes/user.routes';
 import { authRoutes } from '../routes/auth.routes';
+import { categoryRoutes } from '../routes/category.routes';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
 
+interface IPaths {
+    [key: string]: string;
+}
+
 export class Server {
     app;
     port: string;
-    usuariosPath: string;
-    authPath: string;
+    paths: IPaths;
     constructor() {
         this.app = express();
         this.port = process.env.PORT!;
-        this.usuariosPath = '/api/usuarios';
-        this.authPath = '/api/auth';
+
+        this.paths = {
+            usuarios: '/api/usuarios',
+            auth: '/api/auth',
+            category: '/api/categorias'
+        };
         this.createDBConection();
         this.middlewares();
         this.routes();
@@ -33,8 +41,9 @@ export class Server {
     }
 
     routes() {
-        this.app.use(this.usuariosPath, userRoutes);
-        this.app.use(this.authPath, authRoutes);
+        this.app.use(this.paths.usuarios, userRoutes);
+        this.app.use(this.paths.auth, authRoutes);
+        this.app.use(this.paths.category, categoryRoutes);
     }
 
     listen() {
