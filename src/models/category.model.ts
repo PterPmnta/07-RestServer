@@ -19,9 +19,16 @@ const CategorySchema = new Schema<ICategory>({
     },
     user: {
         type: Schema.Types.ObjectId,
-        schema: 'User',
+        ref: 'User',
         required: true
     }
 });
+
+CategorySchema.methods.toJSON = function () {
+    const { __v, status, ...data } = this.toObject();
+    data.user.uid = data.user._id;
+    delete data.user._id;
+    return data;
+};
 
 export const CategoryModel = model<ICategory>('Category', CategorySchema);
