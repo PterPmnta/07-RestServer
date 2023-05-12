@@ -3,11 +3,14 @@ import { check } from 'express-validator';
 import { validateJWT } from '../middlewares/jwt-validator';
 import {
     createCategory,
+    disableCategory,
     getCategories,
-    getCategoriesById
+    getCategoriesById,
+    updateCategories
 } from '../controllers/category.controller';
 import { userValidation } from '../middlewares/user-validator';
 import { existedCategoryById } from '../helpers/db-validator.helper';
+import { validatedAdminRole } from '../middlewares/role-validator';
 
 export const categoryRoutes = Router();
 
@@ -33,6 +36,25 @@ categoryRoutes.get(
     getCategoriesById
 );
 
-categoryRoutes.put('/:id');
+categoryRoutes.put(
+    '/:id',
+    [
+        validateJWT,
+        check('name', 'Name is required').not().isEmpty(),
+        check('id').custom(existedCategoryById),
+        userValidation
+    ],
+    updateCategories
+);
 
-categoryRoutes.delete('/:id');
+categoryRoutes.delete(
+    '/:id',
+    [
+        validateJWT,
+        validatedAdminRole,
+        check('id', 'Id is not valid mongoId').isMongoId(),
+        check('id').custom(existedCategoryById),
+        userValidation
+    ],
+    disableCategory
+);
