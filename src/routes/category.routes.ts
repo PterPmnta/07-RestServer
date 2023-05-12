@@ -1,8 +1,13 @@
 import { Router } from 'express';
 import { check } from 'express-validator';
 import { validateJWT } from '../middlewares/jwt-validator';
-import { createCategory } from '../controllers/category.controller';
+import {
+    createCategory,
+    getCategories,
+    getCategoriesById
+} from '../controllers/category.controller';
 import { userValidation } from '../middlewares/user-validator';
+import { existedCategoryById } from '../helpers/db-validator.helper';
 
 export const categoryRoutes = Router();
 
@@ -16,9 +21,17 @@ categoryRoutes.post(
     createCategory
 );
 
-categoryRoutes.get('/');
+categoryRoutes.get('/', getCategories);
 
-categoryRoutes.get('/:id');
+categoryRoutes.get(
+    '/:id',
+    [
+        check('id', 'Id is not valid mongoId').isMongoId(),
+        check('id').custom(existedCategoryById),
+        userValidation
+    ],
+    getCategoriesById
+);
 
 categoryRoutes.put('/:id');
 
