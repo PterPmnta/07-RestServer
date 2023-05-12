@@ -74,6 +74,48 @@ export const getCategoriesById = async (req: Request, res: Response) => {
     }
 };
 
-export const updateCategories = () => {};
+export const updateCategories = async (req: Request, res: Response) => {
+    try {
+        const { id } = req.params;
+        const { status, user, ...data } = req.body;
 
-export const disableCategory = () => {};
+        data.name = data.name.toUpperCase();
+        data.user = req.user._id;
+
+        const category = await CategoryModel.findByIdAndUpdate(id, data, {
+            new: true
+        });
+
+        res.json({
+            msg: 'Category updated successfully',
+            category
+        });
+    } catch (error) {
+        res.status(500).json({
+            msg: 'Something went wrong - PUT categories'
+        });
+    }
+};
+
+export const disableCategory = async (req: Request, res: Response) => {
+    try {
+        const { id } = req.params;
+        const query = { status: false };
+
+        const categoryDisabled = await CategoryModel.findByIdAndUpdate(
+            id,
+            query,
+            {
+                new: true
+            }
+        );
+
+        res.json({
+            categoryDisabled
+        });
+    } catch (error) {
+        res.status(500).json({
+            msg: 'Something went wrong - DELETE categories'
+        });
+    }
+};
