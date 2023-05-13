@@ -4,6 +4,8 @@ import { dbConnection } from '../database/config.db';
 import { userRoutes } from '../routes/user.routes';
 import { authRoutes } from '../routes/auth.routes';
 import { categoryRoutes } from '../routes/category.routes';
+import { productRoutes } from '../routes/products.routes';
+
 import * as dotenv from 'dotenv';
 
 dotenv.config();
@@ -23,7 +25,8 @@ export class Server {
         this.paths = {
             usuarios: '/api/usuarios',
             auth: '/api/auth',
-            category: '/api/categorias'
+            category: '/api/categorias',
+            products: '/api/productos'
         };
         this.createDBConection();
         this.middlewares();
@@ -44,6 +47,7 @@ export class Server {
         this.app.use(this.paths.usuarios, userRoutes);
         this.app.use(this.paths.auth, authRoutes);
         this.app.use(this.paths.category, categoryRoutes);
+        this.app.use(this.paths.products, productRoutes);
     }
 
     listen() {
