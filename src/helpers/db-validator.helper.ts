@@ -1,4 +1,5 @@
 import { CategoryModel } from '../models/category.model';
+import { ProductModel } from '../models/product.model';
 import { RoleModel } from '../models/role.model';
 import { UserModel } from '../models/user.model';
 
@@ -20,5 +21,11 @@ export const existedUserById = async (id: any) => {
 export const existedCategoryById = async (id: any) => {
     const existedCategory = await CategoryModel.findById(id);
     if (!existedCategory)
-        throw new Error(`The category with id: ${id}) doesn't exist`);
+        throw new Error(`The category with id: ${id} doesn't exist`);
+};
+
+export const existedProductById = async (id: any) => {
+    const existedProduct = await ProductModel.findById(id);
+    if (!existedProduct)
+        throw new Error(`The product with id: ${id} doesn't exist`);
 };
