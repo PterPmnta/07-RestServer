@@ -7,6 +7,7 @@ import { categoryRoutes } from '../routes/category.routes';
 import { productRoutes } from '../routes/products.routes';
 
 import * as dotenv from 'dotenv';
+import { searchRoutes } from '../routes/search.routes';
 
 dotenv.config();
 
@@ -26,7 +27,8 @@ export class Server {
             usuarios: '/api/usuarios',
             auth: '/api/auth',
             category: '/api/categorias',
-            products: '/api/productos'
+            products: '/api/productos',
+            search: '/api/buscar'
         };
         this.createDBConection();
         this.middlewares();
@@ -48,6 +50,7 @@ export class Server {
         this.app.use(this.paths.auth, authRoutes);
         this.app.use(this.paths.category, categoryRoutes);
         this.app.use(this.paths.products, productRoutes);
+        this.app.use(this.paths.search, searchRoutes);
     }
 
     listen() {
