@@ -1,4 +1,4 @@
-export const validatedRole = (req, res, next) => {
+export const validatedAdminRole = (req, res, next) => {
     if (!req.user) {
         return res.status(500).json({
             message: 'Must be validated the JWT first'

@@ -7,6 +7,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+import { CategoryModel } from '../models/category.model';
+import { ProductModel } from '../models/product.model';
 import { RoleModel } from '../models/role.model';
 import { UserModel } from '../models/user.model';
 export const roleValidator = (role = '') => __awaiter(void 0, void 0, void 0, function* () {
@@ -23,5 +25,15 @@ export const existedUserById = (id) => __awaiter(void 0, void 0, void 0, functio
     const existedUser = yield UserModel.findById(id);
     if (!existedUser)
         throw new Error(`The user with id: ${id} doesn't exist`);
+});
+export const existedCategoryById = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const existedCategory = yield CategoryModel.findById(id);
+    if (!existedCategory)
+        throw new Error(`The category with id: ${id} doesn't exist`);
+});
+export const existedProductById = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const existedProduct = yield ProductModel.findById(id);
+    if (!existedProduct)
+        throw new Error(`The product with id: ${id} doesn't exist`);
 });
 //# sourceMappingURL=db-validator.helper.js.map
