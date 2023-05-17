@@ -9,17 +9,25 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import express from 'express';
 import cors from 'cors';
-import { userRoutes } from '../routes/user.routes';
 import { dbConnection } from '../database/config.db';
+import { userRoutes } from '../routes/user.routes';
 import { authRoutes } from '../routes/auth.routes';
+import { categoryRoutes } from '../routes/category.routes';
+import { productRoutes } from '../routes/products.routes';
 import * as dotenv from 'dotenv';
+import { searchRoutes } from '../routes/search.routes';
 dotenv.config();
 export class Server {
     constructor() {
         this.app = express();
         this.port = process.env.PORT;
-        this.usuariosPath = '/api/usuarios';
-        this.authPath = '/api/auth';
+        this.paths = {
+            usuarios: '/api/usuarios',
+            auth: '/api/auth',
+            category: '/api/categorias',
+            products: '/api/productos',
+            search: '/api/buscar'
+        };
         this.createDBConection();
         this.middlewares();
         this.routes();
@@ -35,8 +43,11 @@ export class Server {
         this.app.use(express.static('public'));
     }
     routes() {
-        this.app.use(this.usuariosPath, userRoutes);
-        this.app.use(this.authPath, authRoutes);
+        this.app.use(this.paths.usuarios, userRoutes);
+        this.app.use(this.paths.auth, authRoutes);
+        this.app.use(this.paths.category, categoryRoutes);
+        this.app.use(this.paths.products, productRoutes);
+        this.app.use(this.paths.search, searchRoutes);
     }
     listen() {
         this.app.listen(this.port, () => {
