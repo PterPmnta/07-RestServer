@@ -1,6 +1,6 @@
 import { Schema, model } from 'mongoose';
 
-interface ICategory {
+export interface ICategory extends Document {
     name: string;
     status: boolean;
     user: Schema.Types.ObjectId;

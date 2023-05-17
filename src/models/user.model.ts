@@ -5,7 +5,7 @@ enum ROLEUSER {
     USER = 'USER_ROLE'
 }
 
-interface IUser {
+export interface IUser extends Document {
     name: string;
     email: string;
     password: string;
