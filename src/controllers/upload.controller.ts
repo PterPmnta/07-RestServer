@@ -11,8 +11,8 @@ export const uploadFile = async (req: Request, res: Response) => {
             return res.status(400).send('No files were uploaded.');
         }
 
-        const pathFile = await processUploadFile(req.files.archivo);
-        res.json({ pathFile });
+        const fileName = await processUploadFile(req.files.archivo);
+        res.json({ name: fileName });
     } catch (error) {
         console.log(error);
 

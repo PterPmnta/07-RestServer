@@ -40,7 +40,7 @@ export const processUploadFile = async (
         fileUploaded.mv(uploadPath, function (err) {
             if (err) reject(err);
 
-            resolve(uploadPath);
+            resolve(tempName);
         });
     });
 };
