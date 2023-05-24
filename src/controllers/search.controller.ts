@@ -14,6 +14,13 @@ interface ISearchProcess {
     [key: string]: Function;
 }
 
+type TSearchProcess<
+    T extends string,
+    U extends (IUser | IProduct | ICategory)[]
+> = {
+    [K in T]: (collection: string, term: string, res: Response) => Promise<U>;
+};
+
 interface IModels {
     [key: string]: Model<any>;
 }
@@ -50,7 +57,7 @@ export const searchDynamic = async (req: Request, res: Response) => {
     }
 };
 
-const searchProcess: ISearchProcess = {
+const searchProcess: TSearchProcess<'dynamic', any> = {
     dynamic: async (collection: string, term: string, res: Response) => {
         try {
             const isMongoId = isValidObjectId(term);
