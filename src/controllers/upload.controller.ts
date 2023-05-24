@@ -16,7 +16,7 @@ export const uploadFile = async (req: Request, res: Response) => {
     } catch (error) {
         console.log(error);
 
-        res.status(500).json({
+        res.status(400).json({
             message: 'Something went wrong - Upload file',
             error
         });
