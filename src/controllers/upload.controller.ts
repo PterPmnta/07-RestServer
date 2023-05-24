@@ -1,8 +1,13 @@
 import { Response, Request } from 'express';
+import path from 'path';
+import fs from 'fs';
 import { processUploadFile } from '../helpers/upload-file.helper';
 import { UserModel } from '../models/user.model';
 import { ProductModel } from '../models/product.model';
 import fileUpload from 'express-fileupload';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export const uploadFile = async (req: Request, res: Response) => {
     try {
@@ -21,42 +26,59 @@ export const uploadFile = async (req: Request, res: Response) => {
 };
 
 export const updateImage = async (req: Request, res: Response) => {
-    const { collection, id } = req.params;
+    try {
+        const { collection, id } = req.params;
 
-    let modelo;
+        let modelo;
 
-    switch (collection) {
-        case 'users':
-            modelo = await UserModel.findById(id);
-            if (!modelo)
-                return res.status(400).json({
-                    message: 'No existe el usuario'
+        switch (collection) {
+            case 'users':
+                modelo = await UserModel.findById(id);
+                if (!modelo)
+                    return res.status(400).json({
+                        message: 'No existe el usuario'
+                    });
+                break;
+            case 'products':
+                modelo = await ProductModel.findById(id);
+                if (!modelo)
+                    return res.status(400).json({
+                        message: 'No existe el producto'
+                    });
+                break;
+            default:
+                return res.status(500).json({
+                    message: 'No valid collection'
                 });
-            break;
-        case 'products':
-            modelo = await ProductModel.findById(id);
-            if (!modelo)
-                return res.status(400).json({
-                    message: 'No existe el producto'
-                });
-            break;
-        default:
-            return res.status(500).json({
-                message: 'No valid collection'
-            });
+        }
+
+        const fileUploaded = req.files?.archivo as fileUpload.UploadedFile;
+
+        const fileName: any = await processUploadFile(
+            fileUploaded,
+            undefined,
+            collection
+        );
+
+        if (modelo.img) {
+            const pathImage = path.join(
+                __dirname,
+                '../uploads/',
+                collection,
+                modelo.img
+            );
+
+            if (fs.existsSync(pathImage)) {
+                fs.unlinkSync(pathImage);
+            }
+        }
+
+        modelo.img = fileName;
+
+        await modelo.save();
+
+        res.json(modelo);
+    } catch (error) {
+        res.status(500).json({ msg: 'Error at the moment to upload the file' });
     }
-
-    const fileUploaded = req.files?.archivo as fileUpload.UploadedFile;
-
-    const fileName: any = await processUploadFile(
-        fileUploaded,
-        undefined,
-        collection
-    );
-
-    modelo.img = fileName;
-
-    await modelo.save();
-
-    res.json(modelo);
 };
