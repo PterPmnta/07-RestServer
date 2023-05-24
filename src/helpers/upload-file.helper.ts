@@ -12,9 +12,11 @@ export const processUploadFile = async (
     folder?: string
 ) => {
     let uploadPath: any;
-    extentions = extentionsAllowed;
-    folder = '';
     let joined;
+
+    if (typeof extentions === 'undefined' || extentions.length < 1) {
+        extentions = extentionsAllowed;
+    }
 
     return new Promise((resolve, reject) => {
         const fileUploaded = files as fileUpload.UploadedFile;
@@ -25,20 +27,24 @@ export const processUploadFile = async (
             reject(
                 `The ${fileExtension} is not a valid file extension. Only allowed ${extentions}`
             );
+            return;
         }
 
         const tempName = uuidv4() + '.' + fileExtension;
 
         joined = path.join(__dirname, '../uploads/', tempName);
 
-        if (folder!.length > 0) {
+        if (typeof folder !== 'undefined' || folder!.length > 0) {
             joined = path.join(__dirname, '../uploads/', folder!, tempName);
         }
 
         uploadPath = joined;
 
         fileUploaded.mv(uploadPath, function (err) {
-            if (err) reject(err);
+            if (err) {
+                reject(err);
+                return;
+            }
 
             resolve(tempName);
         });
