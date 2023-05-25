@@ -2,12 +2,13 @@ import { Router } from 'express';
 import { check } from 'express-validator';
 import {
     getImage,
+    updateCloudinaryImage,
     updateImage,
     uploadFile
 } from '../controllers/upload.controller';
 import { userValidation } from '../middlewares/user-validator';
-import { collectionsAllowed } from '../helpers/db-validator.helper';
 import { fileValidator } from '../middlewares/file-validator';
+import { collectionsAllowed } from '../helpers/db-validator.helper';
 
 const exitingCollections = ['users', 'products'];
 
@@ -25,7 +26,7 @@ uploadsRoutes.put(
         ),
         userValidation
     ],
-    updateImage
+    updateCloudinaryImage
 );
 
 uploadsRoutes.get(
