@@ -123,9 +123,9 @@ export const getImage = async (req: Request, res: Response) => {
             }
         }
 
-        res.json({
-            msg: 'Falta place holder'
-        });
+        const pathNoImage = path.join(__dirname, '../assets/no-image.jpg');
+
+        res.sendFile(pathNoImage);
     } catch (error) {
         res.status(500).json({
             msg: 'Error at the moment to visualized the image'
