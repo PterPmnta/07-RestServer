@@ -1,6 +1,10 @@
 import { Router } from 'express';
 import { check } from 'express-validator';
-import { updateImage, uploadFile } from '../controllers/upload.controller';
+import {
+    getImage,
+    updateImage,
+    uploadFile
+} from '../controllers/upload.controller';
 import { userValidation } from '../middlewares/user-validator';
 import { collectionsAllowed } from '../helpers/db-validator.helper';
 import { fileValidator } from '../middlewares/file-validator';
@@ -22,4 +26,16 @@ uploadsRoutes.put(
         userValidation
     ],
     updateImage
+);
+
+uploadsRoutes.get(
+    '/:collection/:id',
+    [
+        check('id', 'No es un id válido de mongo').isMongoId(),
+        check('collection').custom((c) =>
+            collectionsAllowed(c, exitingCollections)
+        ),
+        userValidation
+    ],
+    getImage
 );
