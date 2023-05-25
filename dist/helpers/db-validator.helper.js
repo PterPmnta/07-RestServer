@@ -36,4 +36,11 @@ export const existedProductById = (id) => __awaiter(void 0, void 0, void 0, func
     if (!existedProduct)
         throw new Error(`The product with id: ${id} doesn't exist`);
 });
+export const collectionsAllowed = (collection = '', collections = []) => {
+    const isAllowed = collections.includes(collection);
+    if (!isAllowed) {
+        throw new Error(`The collection ${collection} is not allowed`);
+    }
+    return true;
+};
 //# sourceMappingURL=db-validator.helper.js.map

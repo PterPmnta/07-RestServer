@@ -14,8 +14,10 @@ import { userRoutes } from '../routes/user.routes';
 import { authRoutes } from '../routes/auth.routes';
 import { categoryRoutes } from '../routes/category.routes';
 import { productRoutes } from '../routes/products.routes';
-import * as dotenv from 'dotenv';
 import { searchRoutes } from '../routes/search.routes';
+import { uploadsRoutes } from '../routes/upload.routes';
+import fileUpload from 'express-fileupload';
+import * as dotenv from 'dotenv';
 dotenv.config();
 export class Server {
     constructor() {
@@ -26,7 +28,8 @@ export class Server {
             auth: '/api/auth',
             category: '/api/categorias',
             products: '/api/productos',
-            search: '/api/buscar'
+            search: '/api/buscar',
+            uploads: '/api/uploads'
         };
         this.createDBConection();
         this.middlewares();
@@ -41,6 +44,11 @@ export class Server {
         this.app.use(cors());
         this.app.use(express.json());
         this.app.use(express.static('public'));
+        this.app.use(fileUpload({
+            useTempFiles: true,
+            tempFileDir: '/tmp/',
+            createParentPath: true
+        }));
     }
     routes() {
         this.app.use(this.paths.usuarios, userRoutes);
@@ -48,6 +56,7 @@ export class Server {
         this.app.use(this.paths.category, categoryRoutes);
         this.app.use(this.paths.products, productRoutes);
         this.app.use(this.paths.search, searchRoutes);
+        this.app.use(this.paths.uploads, uploadsRoutes);
     }
     listen() {
         this.app.listen(this.port, () => {
