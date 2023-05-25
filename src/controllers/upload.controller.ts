@@ -82,3 +82,53 @@ export const updateImage = async (req: Request, res: Response) => {
         res.status(500).json({ msg: 'Error at the moment to upload the file' });
     }
 };
+
+export const getImage = async (req: Request, res: Response) => {
+    try {
+        const { collection, id } = req.params;
+
+        let modelo;
+
+        switch (collection) {
+            case 'users':
+                modelo = await UserModel.findById(id);
+                if (!modelo)
+                    return res.status(400).json({
+                        message: 'No existe el usuario'
+                    });
+                break;
+            case 'products':
+                modelo = await ProductModel.findById(id);
+                if (!modelo)
+                    return res.status(400).json({
+                        message: 'No existe el producto'
+                    });
+                break;
+            default:
+                return res.status(500).json({
+                    message: 'No valid collection'
+                });
+        }
+
+        if (modelo.img) {
+            const pathImage = path.join(
+                __dirname,
+                '../uploads/',
+                collection,
+                modelo.img
+            );
+
+            if (fs.existsSync(pathImage)) {
+                return res.sendFile(pathImage);
+            }
+        }
+
+        res.json({
+            msg: 'Falta place holder'
+        });
+    } catch (error) {
+        res.status(500).json({
+            msg: 'Error at the moment to visualized the image'
+        });
+    }
+};
